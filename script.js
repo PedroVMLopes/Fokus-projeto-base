@@ -16,16 +16,18 @@ const timerShort = 300;
 const timerLong = 900;
 
 btnFocus.addEventListener("click", () => {
-  html.setAttribute("data-contexto", "foco");
-  image.setAttribute("src", "/imagens/foco.png");
+  alterarContexto("foco");
 });
 
 btnShort.addEventListener("click", () => {
-  html.setAttribute("data-contexto", "descanso-curto");
-  image.setAttribute("src", "/imagens/descanso-curto.png");
+  alterarContexto("descanso-curto");
 });
 
 btnLong.addEventListener("click", () => {
-  html.setAttribute("data-contexto", "descanso-longo");
-  image.setAttribute("src", "/imagens/descanso-longo.png");
+  alterarContexto("descanso-longo");
 });
+
+function alterarContexto(contexto) {
+  html.setAttribute("data-contexto", contexto);
+  image.setAttribute("src", `/imagens/${contexto}.png`);
+}
