@@ -6,6 +6,8 @@ const image = document.querySelector(".app__image");
 
 const text = document.querySelector(".app__title");
 
+const buttons = document.querySelectorAll(".app__card__button");
+
 // Variáveis dos botões do site
 const btnFocus = document.querySelector(".app__card-button--foco");
 const btnShort = document.querySelector(".app__card-button--curto");
@@ -19,17 +21,23 @@ const timerLong = 900;
 
 btnFocus.addEventListener("click", () => {
   alterarContexto("foco");
+  btnFocus.classList.add("active");
 });
 
 btnShort.addEventListener("click", () => {
   alterarContexto("descanso-curto");
+  btnShort.classList.add("active");
 });
 
 btnLong.addEventListener("click", () => {
   alterarContexto("descanso-longo");
+  btnLong.classList.add("active");
 });
 
 function alterarContexto(contexto) {
+  buttons.forEach(function (contexto) {
+    contexto.classList.remove("ativo");
+  });
   html.setAttribute("data-contexto", contexto);
   image.setAttribute("src", `/imagens/${contexto}.png`);
   switch (contexto) {
