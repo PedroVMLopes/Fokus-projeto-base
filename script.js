@@ -13,6 +13,19 @@ const btnFocus = document.querySelector(".app__card-button--foco");
 const btnShort = document.querySelector(".app__card-button--curto");
 const btnLong = document.querySelector(".app__card-button--longo");
 const btnPlay = document.querySelector("#start-pause");
+const musicFocusInput = document.querySelector("#alternar-musica");
+
+// Colocando o áudio da música como uma constante
+const music = new Audio("/sons/luna-rise-part-one.mp3");
+music.loop == true;
+
+musicFocusInput.addEventListener("change", () => {
+  if (music.paused == true) {
+    music.play();
+  } else {
+    music.pause();
+  }
+});
 
 // Tempo dos tipos de temporizador
 const timerFocus = 1500;
