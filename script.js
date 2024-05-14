@@ -6,7 +6,7 @@ const image = document.querySelector(".app__image");
 
 const text = document.querySelector(".app__title");
 
-const buttons = document.querySelectorAll(".app__card__button");
+const buttons = document.querySelectorAll(".app__card-button");
 
 // Variáveis dos botões do site
 const btnFocus = document.querySelector(".app__card-button--foco");
@@ -14,6 +14,10 @@ const btnShort = document.querySelector(".app__card-button--curto");
 const btnLong = document.querySelector(".app__card-button--longo");
 const btnPlay = document.querySelector("#start-pause");
 const musicFocusInput = document.querySelector("#alternar-musica");
+const btnStartPause = document.querySelector("#start-pause");
+
+let timePassedInSeconds = 5;
+let breakID = null;
 
 // Colocando o áudio da música como uma constante
 const music = new Audio("/sons/luna-rise-part-one.mp3");
@@ -49,7 +53,7 @@ btnLong.addEventListener("click", () => {
 
 function alterarContexto(contexto) {
   buttons.forEach(function (contexto) {
-    contexto.classList.remove("ativo");
+    contexto.classList.remove("active");
   });
   html.setAttribute("data-contexto", contexto);
   image.setAttribute("src", `/imagens/${contexto}.png`);
@@ -71,9 +75,34 @@ function alterarContexto(contexto) {
             Hora de voltar a superfície<br>
             <strong class="app__title-strong">Faça uma pausa longa.</strong>
             `;
-      console.log("descanso longo");
       break;
     default:
       break;
   }
+}
+
+const countdown = () => {
+  if (timePassedInSeconds <= 0) {
+    zero();
+    alert("Tempo Finalizado!");
+    return;
+  }
+  timePassedInSeconds -= 1;
+  console.log("Temporizador: " + timePassedInSeconds);
+};
+
+btnStartPause.addEventListener("click", startPauseCountdown);
+
+function startPauseCountdown() {
+  if (breakID) {
+    zero();
+    return;
+  }
+  breakID = setInterval(countdown, 1000);
+}
+
+// Função que zera o cronômetro
+function zero() {
+  clearInterval(breakID);
+  breakID = null;
 }
