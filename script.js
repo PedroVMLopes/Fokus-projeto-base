@@ -21,6 +21,10 @@ let breakID = null;
 
 // Colocando o áudio da música como uma constante
 const music = new Audio("/sons/luna-rise-part-one.mp3");
+const beepSound = new Audio("/sons/beep.mp3");
+const playSound = new Audio("/sons/play.wav");
+const pauseSound = new Audio("/sons/pause.mp3");
+
 music.loop == true;
 
 musicFocusInput.addEventListener("change", () => {
@@ -83,8 +87,9 @@ function alterarContexto(contexto) {
 
 const countdown = () => {
   if (timePassedInSeconds <= 0) {
-    zero();
+    //beepSound.play();
     alert("Tempo Finalizado!");
+    zeroCountdown();
     return;
   }
   timePassedInSeconds -= 1;
@@ -93,16 +98,21 @@ const countdown = () => {
 
 btnStartPause.addEventListener("click", startPauseCountdown);
 
+btnPlay.addEventListener("click", () => {
+  playSound.play();
+});
+
 function startPauseCountdown() {
   if (breakID) {
-    zero();
+    zeroCountdown();
+    pauseSound.play();
     return;
   }
   breakID = setInterval(countdown, 1000);
 }
 
 // Função que zera o cronômetro
-function zero() {
+function zeroCountdown() {
   clearInterval(breakID);
   breakID = null;
 }
