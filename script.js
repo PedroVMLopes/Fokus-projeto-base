@@ -8,15 +8,18 @@ const text = document.querySelector(".app__title");
 
 const buttons = document.querySelectorAll(".app__card-button");
 
+const timerOnScreen = document.querySelector("#timer");
+
 // Variáveis dos botões do site
 const btnFocus = document.querySelector(".app__card-button--foco");
 const btnShort = document.querySelector(".app__card-button--curto");
 const btnLong = document.querySelector(".app__card-button--longo");
 const btnPlay = document.querySelector("#start-pause");
 const musicFocusInput = document.querySelector("#alternar-musica");
-const btnStartPause = document.querySelector("#start-pause");
+const btnStartPause = document.querySelector("#start-pause span");
+const btnIcon = document.querySelector(".app__card-primary-butto-icon");
 
-let timePassedInSeconds = 5;
+let timePassedInSeconds = 1500;
 let breakID = null;
 
 // Colocando o áudio da música como uma constante
@@ -93,14 +96,10 @@ const countdown = () => {
     return;
   }
   timePassedInSeconds -= 1;
-  console.log("Temporizador: " + timePassedInSeconds);
+  showTime();
 };
 
 btnStartPause.addEventListener("click", startPauseCountdown);
-
-btnPlay.addEventListener("click", () => {
-  playSound.play();
-});
 
 function startPauseCountdown() {
   if (breakID) {
@@ -108,11 +107,24 @@ function startPauseCountdown() {
     pauseSound.play();
     return;
   }
+  playSound.play();
   breakID = setInterval(countdown, 1000);
+  btnStartPause.textContent = "Pausar";
+  btnIcon.setAttribute("src", "/imagens/pause.png");
 }
 
 // Função que zera o cronômetro
 function zeroCountdown() {
   clearInterval(breakID);
+  btnStartPause.textContent = "Começar";
+  btnIcon.setAttribute("src", "/imagens/play_arrow.png");
   breakID = null;
 }
+
+function showTime() {
+  const time = timePassedInSeconds;
+  timerOnScreen.innerHTML = `${time}`;
+}
+
+// Invoca a função globalmente para o timer estar sempre aparecendo na tela
+showTime();
