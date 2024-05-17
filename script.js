@@ -44,21 +44,25 @@ const timerShort = 300;
 const timerLong = 900;
 
 btnFocus.addEventListener("click", () => {
+  timePassedInSeconds = 1500;
   alterarContexto("foco");
   btnFocus.classList.add("active");
 });
 
 btnShort.addEventListener("click", () => {
+  timePassedInSeconds = 300;
   alterarContexto("descanso-curto");
   btnShort.classList.add("active");
 });
 
 btnLong.addEventListener("click", () => {
+  timePassedInSeconds = 900;
   alterarContexto("descanso-longo");
   btnLong.classList.add("active");
 });
 
 function alterarContexto(contexto) {
+  showTime();
   buttons.forEach(function (contexto) {
     contexto.classList.remove("active");
   });
@@ -90,7 +94,7 @@ function alterarContexto(contexto) {
 
 const countdown = () => {
   if (timePassedInSeconds <= 0) {
-    //beepSound.play();
+    beepSound.play();
     alert("Tempo Finalizado!");
     zeroCountdown();
     return;
@@ -122,8 +126,12 @@ function zeroCountdown() {
 }
 
 function showTime() {
-  const time = timePassedInSeconds;
-  timerOnScreen.innerHTML = `${time}`;
+  const time = new Date(timePassedInSeconds * 1000);
+  const timeFormatted = time.toLocaleTimeString("pt-Br", {
+    minute: "2-digit",
+    second: "2-digit",
+  });
+  timerOnScreen.innerHTML = `${timeFormatted}`;
 }
 
 // Invoca a função globalmente para o timer estar sempre aparecendo na tela
