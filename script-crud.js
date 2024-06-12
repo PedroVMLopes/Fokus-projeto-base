@@ -4,6 +4,12 @@ const textArea = document.querySelector(".app__form-textarea");
 const ulTasks = document.querySelector(".app__section-task-list");
 
 const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let selectedTask = null;
+let liSelectedTask = null;
+
+const paragraphTaskDescription = document.querySelector(
+  ".app__section-active-task-description"
+);
 
 function updateTasks() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -33,6 +39,7 @@ function createTaskElement(task) {
   button.classList.add("app_button-edit");
 
   button.onclick = () => {
+    // debugger;
     const newDescription = prompt("Qual é o novo nome da tarefa ?");
     console.log("Nova descrição da tarefa: ", newDescription);
     if (newDescription) {
@@ -50,6 +57,30 @@ function createTaskElement(task) {
   li.append(svg);
   li.append(paragraph);
   li.append(button);
+
+  // Marcação das tarefas em andamento
+  li.onclick = () => {
+    // Seleciona todos os elementos da lista e remove a classe de ativo
+    document
+      .querySelectorAll(".app__section-task-list-item-active")
+      .forEach((element) => {
+        element.classList.remove("app__section-task-list-item-active");
+      });
+
+    // Remove a seleção de uma tarefa ao clicar novamente nela
+    if (selectedTask == task) {
+      paragraphTaskDescription.textContent = "";
+      selectedTask = null;
+      liSelectedTask = null;
+      return;
+    }
+    selectedTask = task;
+    liSelectedTask = li;
+    paragraphTaskDescription.textContent = task.description;
+
+    // Adiciona a classe de ativo apenas para o elemento selecionado
+    li.classList.add("app__section-task-list-item-active");
+  };
 
   return li;
 }
@@ -82,4 +113,15 @@ formAddTask.addEventListener("submit", (event) => {
 tasks.forEach((task) => {
   const taskElement = createTaskElement(task);
   ulTasks.append(taskElement);
+});
+
+// Verifica a tarefa selecionada
+// Troca o marcador da tarefa de ativa para completa e desabilita o botão de edição
+document.addEventListener("FinishedFocus", () => {
+  console.log("foco finalizado");
+  if (selectedTask && liSelectedTask) {
+    liSelectedTask.classList.remove("app__section-task-list-item-active");
+    liSelectedTask.classList.add("app__section-task-list-item-complete");
+    liSelectedTask.querySelector("button").setAttribute("disabled", "disabled");
+  }
 });

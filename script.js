@@ -96,6 +96,14 @@ const countdown = () => {
   if (timePassedInSeconds <= 0) {
     beepSound.play();
     alert("Tempo Finalizado!");
+
+    // Gera uma constante que verifica se o modo foco foi finalizado
+    // Cria um dispatch para que outros arquivos possam utilizar essa informação
+    const activeFocus = html.getAttribute("data-contexto") == "foco";
+    if (activeFocus) {
+      const event = new CustomEvent("FinishedFocus");
+      document.dispatchEvent(event);
+    }
     zeroCountdown();
     return;
   }
