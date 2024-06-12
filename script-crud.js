@@ -5,6 +5,14 @@ const ulTasks = document.querySelector(".app__section-task-list");
 
 const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
+function updateTasks() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function cancelAddTask() {
+  btnCancelAddTask.addEventListener("click", () => {});
+}
+
 function createTaskElement(task) {
   const li = document.createElement("li");
   li.classList.add("app__section-task-list-item");
@@ -24,6 +32,16 @@ function createTaskElement(task) {
   const button = document.createElement("button");
   button.classList.add("app_button-edit");
 
+  button.onclick = () => {
+    const newDescription = prompt("Qual é o novo nome da tarefa ?");
+    console.log("Nova descrição da tarefa: ", newDescription);
+    if (newDescription) {
+      paragraph.textContent = newDescription;
+      task.description = newDescription;
+      updateTasks();
+    }
+  };
+
   const buttonImage = document.createElement("img");
   buttonImage.setAttribute("src", "/imagens/edit.png");
 
@@ -38,6 +56,14 @@ function createTaskElement(task) {
 
 btnAddTask.addEventListener("click", () => {
   formAddTask.classList.toggle("hidden");
+
+  const btnCancelAddTask = document.querySelector(
+    ".app__form-footer__button--cancel"
+  );
+  btnCancelAddTask.addEventListener("click", () => {
+    textArea.value = "";
+    formAddTask.classList.toggle("hidden");
+  });
 });
 
 formAddTask.addEventListener("submit", (event) => {
@@ -48,7 +74,7 @@ formAddTask.addEventListener("submit", (event) => {
   tasks.push(task);
   const taskElement = createTaskElement(task);
   ulTasks.append(taskElement);
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+  updateTasks();
   textArea.value = "";
   formAddTask.classList.add("hidden");
 });
