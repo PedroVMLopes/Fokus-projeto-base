@@ -3,13 +3,19 @@ const formAddTask = document.querySelector(".app__form-add-task");
 const textArea = document.querySelector(".app__form-textarea");
 const ulTasks = document.querySelector(".app__section-task-list");
 
-const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 let selectedTask = null;
 let liSelectedTask = null;
 
 const paragraphTaskDescription = document.querySelector(
   ".app__section-active-task-description"
 );
+
+const btnRemoveCompletedTasks = document.querySelector(
+  "#btn-remover-concluidas"
+);
+
+const btnRemoveAllTasks = document.querySelector("#btn-remover-todas");
 
 function updateTasks() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -58,29 +64,35 @@ function createTaskElement(task) {
   li.append(paragraph);
   li.append(button);
 
-  // Marcação das tarefas em andamento
-  li.onclick = () => {
-    // Seleciona todos os elementos da lista e remove a classe de ativo
-    document
-      .querySelectorAll(".app__section-task-list-item-active")
-      .forEach((element) => {
-        element.classList.remove("app__section-task-list-item-active");
-      });
+  // Verifica se a tarefa já está marcada como completa
+  if (task.complete) {
+    li.classList.add("app__section-task-list-item-complete");
+    button.setAttribute("disabled", "disabled");
+  } else {
+    // Marcação das tarefas em andamento
+    li.onclick = () => {
+      // Seleciona todos os elementos da lista e remove a classe de ativo
+      document
+        .querySelectorAll(".app__section-task-list-item-active")
+        .forEach((element) => {
+          element.classList.remove("app__section-task-list-item-active");
+        });
 
-    // Remove a seleção de uma tarefa ao clicar novamente nela
-    if (selectedTask == task) {
-      paragraphTaskDescription.textContent = "";
-      selectedTask = null;
-      liSelectedTask = null;
-      return;
-    }
-    selectedTask = task;
-    liSelectedTask = li;
-    paragraphTaskDescription.textContent = task.description;
+      // Remove a seleção de uma tarefa ao clicar novamente nela
+      if (selectedTask == task) {
+        paragraphTaskDescription.textContent = "";
+        selectedTask = null;
+        liSelectedTask = null;
+        return;
+      }
+      selectedTask = task;
+      liSelectedTask = li;
+      paragraphTaskDescription.textContent = task.description;
 
-    // Adiciona a classe de ativo apenas para o elemento selecionado
-    li.classList.add("app__section-task-list-item-active");
-  };
+      // Adiciona a classe de ativo apenas para o elemento selecionado
+      li.classList.add("app__section-task-list-item-active");
+    };
+  }
 
   return li;
 }
@@ -123,5 +135,22 @@ document.addEventListener("FinishedFocus", () => {
     liSelectedTask.classList.remove("app__section-task-list-item-active");
     liSelectedTask.classList.add("app__section-task-list-item-complete");
     liSelectedTask.querySelector("button").setAttribute("disabled", "disabled");
+    // Adiciona o atributo 'complete' no elemento na localStorage
+    selectedTask.complete = true;
+    updateTasks();
   }
 });
+
+const removeTasks = (onlyCompleted) => {
+  const selector = onlyCompleted
+    ? ".app__section-task-list-item-complete"
+    : ".app__section-task-list-item";
+  document.querySelectorAll(selector).forEach((element) => {
+    element.remove();
+  });
+  tasks = onlyCompleted ? tasks.filter((task) => !task.complete) : [];
+  updateTasks();
+};
+
+btnRemoveCompletedTasks.onclick = () => removeTasks(true);
+btnRemoveAllTasks.onclick = () => removeTasks(false);
